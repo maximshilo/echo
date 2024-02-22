@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/maximshilo00/echo#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "mongoose": "^8.1.3"
   }
 }
