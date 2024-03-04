@@ -1,0 +1,39 @@
+.Signin {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+    min-width: 100vw;
+    min-height: 90vh;
+}
+
+.signinContainer {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: stretch;
+}
+
+.signinBigEchoTitle {
+    font-size: 10vh;
+    margin: 2vh 4vw;
+}
+
+.signupRedirectionDiv {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.siginPageInputsDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    margin: 2vh 4vw;
+}
