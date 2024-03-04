@@ -12,6 +12,10 @@ export default function Signin(props) {
                 </div>
                 <div className='verticalLine'></div>
                 <div className='siginPageInputsDiv'>
+                    <div className='signinTitles'>
+                        <span className='signinPrimaryTitle'>Jump in!</span>
+                        <span className='signinSecondaryTitle'>Sign in with an existing ECHO account</span>
+                    </div>
                     <div className='signinContainer'>
                         <input className='defaultUserInfoInput' type='text' placeholder='Email'></input>
                         <input className='defaultUserInfoInput' type='password' placeholder='Password'></input>

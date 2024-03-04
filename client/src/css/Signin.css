@@ -42,4 +42,23 @@
     justify-content: flex-start;
     align-items: stretch;
     margin: 2vh 4vw;
+    min-width: 20vw;
+}
+
+.signinTitles {
+    display: flex;
+    flex-direction: column;
+    margin: 2vh 0 4vh 0;
+}
+
+.signinPrimaryTitle {
+    font-weight: bolder;
+    font-size: 5vh;
+    text-shadow: 0.25px 0.25px 0 rgba(255, 221, 0, 0.95);
+    color: rgba(0, 0, 0, 0.95);
+}
+
+.signinSecondaryTitle {
+    color: rgba(82, 82, 82, 0.95);
+    font-size: 1vh;
 }

@@ -12,6 +12,10 @@ export default function Signup(props) {
                 </div>
                 <div className='verticalLine'></div>
                 <div className='sigupPageInputsDiv'>
+                    <div className='signupTitles'>
+                        <span className='signupPrimaryTitle'>Join the fun!</span>
+                        <span className='signupSecondaryTitle'>Sign up for an ECHO account</span>
+                    </div>
                     <div className='signupContainer'>
                         <input className='defaultUserInfoInput' type='text' placeholder='Username'></input>
                         <input className='defaultUserInfoInput' type='text' placeholder='Email'></input>
