@@ -13,18 +13,66 @@ body {
   font-size: 1.5vh;
 }
 
-input, button, select {
+input,
+button,
+select {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  font-size: 1.5vh;
+  font-size: 2vh;
 }
 
 input {
   text-indent: 1vw;
-  border: 0.25px solid rgb(169, 169, 169);
+  border: 0.25px solid rgb(150, 150, 150);
   border-radius: 0.25vw;
+}
+
+button {
+  border: 0.25px solid rgba(82, 82, 82, 0.99);
+  border-radius: 0.25vw;
+  background: rgba(255, 255, 255, 1);
+  font-weight: bold;
+  transition: 100ms;
+
+  box-shadow: inset 0 0 5px rgba(82, 82, 82, 0), 
+              0 0 5px rgba(82, 82, 82, 0);
+}
+
+button:hover {
+  transform: scale(1.02);
+  box-shadow: inset 0 0 5px rgba(82, 82, 82, 0), 
+              0 0 5px rgba(82, 82, 82, 0.3);
+}
+
+button:active {
+  transform: scale(1.02);
+  box-shadow: inset 0 0 5px rgba(82, 82, 82, 0.3), 
+              0 0 5px rgba(82, 82, 82, 0);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:link {
+  color: rgb(99, 148, 237);
+}
+
+/* visited link */
+a:visited {
+  color: rgb(100, 123, 237);
+}
+
+/* mouse over link */
+a:hover {
+  color: rgb(217, 94, 155);
+}
+
+/* selected link */
+a:active {
+  color: blue;
 }

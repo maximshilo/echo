@@ -10,15 +10,16 @@ export default function Signin(props) {
                 <div>
                     <span className='signinBigEchoTitle'>Echo</span>
                 </div>
+                <div className='verticalLine'></div>
                 <div className='siginPageInputsDiv'>
                     <div className='signinContainer'>
-                        <input className='defaultuserInfoInput' type='text' placeholder='Email'></input>
-                        <input className='defaultuserInfoInput' type='password' placeholder='Password'></input>
-                        <button>Log in</button>
-                        <a>Recover password</a>
+                        <input className='defaultUserInfoInput' type='text' placeholder='Email'></input>
+                        <input className='defaultUserInfoInput' type='password' placeholder='Password'></input>
+                        <button className='generalUseWideButton'>Log in</button>
+                        <a href='#'>Recover password</a>
                     </div>
                     <div className='signupRedirectionDiv'>
-                        <Link to={'/signup'}><button>Create new account</button></Link>
+                        <Link to={'/signup'}><button className='generalUseWideButtonInLink'>Create new account</button></Link>
                     </div>
                 </div>
             </div>
