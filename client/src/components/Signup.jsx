@@ -1,21 +1,24 @@
 import React from 'react'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 
 import '../css/Signup.css'
 
 const numbers = '1234567890'
 const letters = 'abcdefghijklmnopqrstuvwxyz'
-const symblos = '!@#$%^&*'
+const symbols = '!@#$%^&*'
 
 export default function Signup(props) {
+    const navigation = useNavigate()
+
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [dob, setDob] = useState([0, 0, 0])
 
-    const [errors, setErrors] = useState(['asdasd', '', '', ''])
+    const [errors, setErrors] = useState(['', '', '', ''])
 
     const updateDateOfBirth = (v, id) => {
         let temp = dob
@@ -28,7 +31,7 @@ export default function Signup(props) {
             username,
             email,
             password,
-            dob : new Date(dob[2], dob[1], dob[0])
+            dob : new Date(dob[2], dob[1] - 1, dob[0])
         }
 
         let res = await fetch('/db/signupNewUser', {
@@ -58,12 +61,9 @@ export default function Signup(props) {
             error += 'Only acceptable date format: 1/1/2000'
         }
 
-        if (error.length < 1 && dob[1] > 0) {
-            dob[1] = month - 1
-        }
-
         return error
     }
+
     const validatePassword = () => {
         let p = password
         let error = ''
@@ -76,8 +76,8 @@ export default function Signup(props) {
                 error += 'Password must contain a letter\n'
             }
 
-            if (p.split('').filter(c => symblos.includes(c)) < 1) {
-                error += 'Password must contain one of the following ' + symblos.split('').toString() + '\n'
+            if (p.split('').filter(c => symbols.includes(c)) < 1) {
+                error += 'Password must contain one of the following ' + symbols.split('').toString() + '\n'
             }
         } else {
             error += 'Password must contain at least 8 characters.\n'
@@ -89,6 +89,7 @@ export default function Signup(props) {
 
         return error
     }
+
     const validateEmail = () => {
         let e = email
         let error = ''
@@ -113,7 +114,7 @@ export default function Signup(props) {
                 }
             }
             else {
-                error += 'Email must include a @.\n'
+                error += 'Email must include an @.\n'
             }
         } else {
             error += 'Must input an Email.\n'
@@ -121,6 +122,7 @@ export default function Signup(props) {
 
         return error
     }
+
     const validateUsername = () => {
         let u = username
         let error = ''
@@ -132,6 +134,7 @@ export default function Signup(props) {
 
         return error
     }
+
     const validateInfo = () => {
         let errors = []
 
@@ -149,7 +152,14 @@ export default function Signup(props) {
 
         if (infoValidity) {
             await signup().then((res) => { return res.json() })
-                .then((json) => console.log(json))
+                .then((json) => {
+                    if (json.status == 500) {
+                        if (json.error) console.error(json.error)
+                        else console.error('Unknown error on user sign up.')
+                    } else {
+                        navigation(`/home/${json.info.username}`)
+                    }
+                })
         }
     }
 

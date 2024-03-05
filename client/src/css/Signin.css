@@ -23,7 +23,8 @@
     font-size: 20vh;
     margin: 2vh 10vw 2vh 5vw;
     font-weight: bolder;
-    text-shadow: 5px 5px 0 rgba(255, 221, 0, 0.95);
+    text-shadow: 4px 4px 0 rgba(255, 221, 0, 0.95),
+                8px 8px 0 rgba(50, 50, 50, 0.95);
     color: rgba(50, 50, 50, 0.95);
 }
 
@@ -60,5 +61,5 @@
 
 .signinSecondaryTitle {
     color: rgba(82, 82, 82, 0.95);
-    font-size: 1vh;
+    font-size: 1.5vh;
 }

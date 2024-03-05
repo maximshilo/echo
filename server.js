@@ -30,7 +30,6 @@ app.post('/db/signupNewUser', async (req, res) => {
         }
 
         let user = req.body
-        console.log(user)
         await usersModel.insertMany(user)
 
         let dataRequest = await usersModel.find({ email: user.email, password: user.password })
@@ -58,7 +57,7 @@ app.post('/db/signinUser', async (req, res) => {
         }
 
         let attempInfo = req.body
-        let dataRequest = await usersModel.find({ email: attempInfo.email, password: attempInfo.password })
+        let dataRequest = await usersModel.findOne({ email: attempInfo.email, password: attempInfo.password })
 
         if (dataRequest) {
             tempRes.status = 200
