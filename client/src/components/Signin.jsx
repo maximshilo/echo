@@ -3,6 +3,9 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 
+import store from '../redux/store.js'
+import { signinUser } from '../redux/actions.js'
+
 import '../css/Signin.css'
 
 const numbers = '1234567890'
@@ -111,7 +114,8 @@ export default function Signin(props) {
                         temp[1] = ''
                         setErrors(temp)
                     } else {
-                        navigation(`/home/${json.info.username}`)
+                        store.dispatch(signinUser({ ...json.info }))
+                        navigation(`/home`)
                     }
                 })
         }

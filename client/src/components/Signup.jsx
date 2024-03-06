@@ -157,7 +157,7 @@ export default function Signup(props) {
                         if (json.error) console.error(json.error)
                         else console.error('Unknown error on user sign up.')
                     } else {
-                        navigation(`/home/${json.info.username}`)
+                        navigation(`/home`)
                     }
                 })
         }

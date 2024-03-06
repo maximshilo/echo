@@ -1,19 +1,26 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
-export default function Navbar () {
+import store from '../redux/store'
+import { signout } from '../redux/actions'
+
+import '../css/Navbar.css'
+
+export default function Navbar (props) {
+    const navigation = useNavigate()
+
+    let user = props.user
+    
     return (
         <div className='Navbar'>
             <div className='navbarContainer'>
-                <div className='navbarLogoContainer'>
-                    <span>ECHO</span>
-                </div>
-                <div className='navbarButtonsContainer'>
-                    <Link to='/'><button>HOME</button></Link>
-                </div>
-                <div className='userInteractionsContainer'>
-                    <span>Hello, Guest</span>
-                </div>
+                <span>Welcome, {user.username}</span>
+                <button onClick={() => {
+                    store.dispatch(signout())
+                    navigation('/')
+                    }}>
+                    Sign out
+                </button>
             </div>
         </div>
     )

@@ -36,10 +36,22 @@ app.post('/db/signupNewUser', async (req, res) => {
 
         if (dataRequest) {
             tempRes.status = 200
-            tempRes.info = { username: dataRequest.username, id: dataRequest._id }
+            tempRes.info = {
+                username: dataRequest.username,
+                id: dataRequest._id,
+                dob : dataRequest.dob,
+                email : dataRequest.email,
+                following : dataRequest.following,
+            }
         } else {
             tempRes.status = 500
-            tempRes.info = { username: null, id: null }
+            tempRes.info = {
+                username: null,
+                id: null,
+                dob: null,
+                email: null,
+                following: []
+            }
         }
 
         res.status(tempRes.status).json(tempRes)
@@ -61,10 +73,22 @@ app.post('/db/signinUser', async (req, res) => {
 
         if (dataRequest) {
             tempRes.status = 200
-            tempRes.info = { username: dataRequest.username, id: dataRequest._id }
+            tempRes.info = {
+                username: dataRequest.username,
+                id: dataRequest._id,
+                dob : dataRequest.dob,
+                email : dataRequest.email,
+                following : dataRequest.following,
+            }
         } else {
             tempRes.status = 500
-            tempRes.info = { username: null, id: null }
+            tempRes.info = {
+                username: null,
+                id: null,
+                dob: null,
+                email: null,
+                following: []
+            }
         }
 
         res.status(tempRes.status).json(tempRes)
