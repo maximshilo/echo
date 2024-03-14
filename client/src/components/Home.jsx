@@ -14,7 +14,7 @@ export default function Home () {
             <div className='homeContainer'>
                 <div>
                     <h1>{currentUser.email}</h1>
-                    <h1>{currentUser.dob}</h1>
+                    <h1>{new Date(currentUser.dob).toLocaleDateString()}</h1>
                     <h1>{currentUser.following}</h1>
                     <h1>{currentUser.id}</h1>
                 </div>
