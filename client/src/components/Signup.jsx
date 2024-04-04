@@ -28,10 +28,11 @@ export default function Signup(props) {
 
     const signup = async () => {
         let user = {
-            username,
             email,
+            username,
             password,
-            dob : new Date(dob[2], dob[1] - 1, dob[0])
+            dob : new Date(dob[2], dob[1] - 1, dob[0]),
+            profilePicture : Math.floor(Math.random() * 7) + 1
         }
 
         let res = await fetch('/db/signupNewUser', {
