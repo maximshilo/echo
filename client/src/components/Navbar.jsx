@@ -1,24 +1,48 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate, createSearchParams } from 'react-router-dom'
 
 import store from '../redux/store'
 import { signout } from '../redux/actions'
 
 import '../css/Navbar.css'
 
-export default function Navbar (props) {
-    const navigation = useNavigate()
+export default function Navbar(props) {
+    const [search, setSearch] = useState('')
+    const navigate = useNavigate()
 
     let user = props.user
-    
+
     return (
         <div className='Navbar'>
             <div className='navbarContainer'>
                 <span>Welcome, {user.username}</span>
+                <div>
+                    <input
+                        type='text'
+                        style={{ textIndent: '0', textAlign: 'center' }}
+                        placeholder='serach for another user'
+                        onChange={(e) => {
+                            setSearch(e.target.value) 
+                            }}
+                        
+                        maxLength={15}>
+                    </input>
+                    <button
+                        onClick={() => {
+                            navigate({
+                                pathname : '/search',
+                                search : createSearchParams({
+                                    search
+                                }).toString()
+                            })
+                        }}
+                    >Search</button>
+                </div>
                 <button onClick={() => {
                     store.dispatch(signout())
-                    navigation('/')
-                    }}>
+                    navigate('/')
+                }}>
                     Sign out
                 </button>
             </div>

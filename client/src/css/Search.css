@@ -1,0 +1,23 @@
+.Search {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+
+    width: 100vw;
+}
+
+.searchContainer {
+    width: 60vw;
+    max-width: 1280px;
+    min-width: 360px;
+
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+
+}

@@ -7,6 +7,7 @@ import Navbar from './components/Navbar'
 import Home from './components/Home'
 import Signin from './components/Signin'
 import Signup from './components/Signup'
+import Search from './components/Search'
 
 import store from './redux/store.js'
 
@@ -24,8 +25,9 @@ function App() {
 
           <Route element={<PrivateRoutes />}>
             <Route path='/home' element={<Home />}></Route>
+            <Route path='/search' element={<Search />}></Route>
           </Route>
-          
+
         </Routes>
       </Router>
     </div>

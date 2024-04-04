@@ -38,7 +38,7 @@ export default function Home() {
     }
 
     const loadPosts = async () => {
-        let content = await fetch('/db/getPostsByUserId', {
+        let userPosts = await fetch('/db/getPostsByUserId', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -46,8 +46,18 @@ export default function Home() {
             body: JSON.stringify({ id: currentUser.id })
         }).then(res => res.json())
 
-        console.log(content)
-        setPosts(content.sort((a, b) => new Date(b.date) - new Date(a.date)))
+
+        let followingPosts = await fetch('/db/getFollowingPosts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ following : currentUser.following })
+        }).then(res => res.json())
+        console.log(followingPosts)
+
+        let allPosts = [...userPosts, ...followingPosts]
+        setPosts(allPosts.sort((a, b) => new Date(b.date) - new Date(a.date)))
     }
 
     useEffect(() => {

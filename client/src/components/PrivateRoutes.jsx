@@ -5,7 +5,6 @@ export default function PrivateRoutes() {
 
     let user = store.getState().userReducer.currentUser
     let auth = false
-
     
     if (user) {
         if (user.username != null) auth = true
