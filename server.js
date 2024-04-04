@@ -162,6 +162,14 @@ app.put('/db/unlikePost', async (req, res) => {
     res.status(200).json({ message : 'OK'})
 })
 
+app.put('/db/deletePost', async (req, res) => {
+    let postID = req.body.postID
+
+    let temp = await postsModel.findOneAndDelete({ _id: postID })
+
+    res.status(200).json(temp)
+})
+
 app.get('*', (req, res) => {
     try {
         res.sendFile('./index.html')

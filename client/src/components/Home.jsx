@@ -47,7 +47,7 @@ export default function Home() {
         }).then(res => res.json())
 
         console.log(content)
-        setPosts(content)
+        setPosts(content.sort((a, b) => new Date(b.date) - new Date(a.date)))
     }
 
     useEffect(() => {
@@ -56,7 +56,7 @@ export default function Home() {
 
 
     const displayPosts = () => {
-        return posts.reverse().map(post => <Post post={post} />)
+        return <div>{posts.map((post, idx) => <Post render={{loadPostsFlag, setLoadPostsFlag}} key={post._id} post={post} />)}</div>
     }
 
     return (

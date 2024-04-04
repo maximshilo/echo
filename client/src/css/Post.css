@@ -29,7 +29,7 @@
     padding: 0 12px;
 }
 
-.likes {
+.likes, .delete {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -37,12 +37,29 @@
     user-select: none;
     position: absolute;
     right: 0;
-    top: 0;
 }
 
-.heart {
+.likes {
+    top : 0;
+}
+
+.delete {
+    bottom: 0;
+}
+
+.heart, .trashcan {
     transition: 75ms;
     border-radius: 6px;
+}
+
+.trashcan:hover {
+    background: aliceblue;
+    transform: scale(1.05);
+}
+
+.trashcan:active {
+    background: gray;
+    transform: scale(1.15);
 }
 
 .heart:hover {
