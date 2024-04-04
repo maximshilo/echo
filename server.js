@@ -21,6 +21,42 @@ const userSchema = mongoose.Schema({
 
 const usersModel = mongoose.model('users', userSchema)
 
+const postSchema = mongoose.Schema({
+    content : String,
+    date : Date,
+    likes : Array,
+    usesname : String,
+    userID : String
+})
+
+const postsModel = mongoose.model('posts', postSchema)
+
+app.post('/db/addNewPost', async (req, res) => {
+    let tempRes = {
+        status : 200,
+        info : ''
+    }
+
+    let newPost = req.body
+
+    await postsModel.insertMany(newPost)
+
+    res.status(tempRes.status).json(tempRes)
+})
+
+app.post('/db/getPostsByUserId', async (req, res) => {
+    let tempRes = {
+        status : 200,
+        content : {}
+    }
+
+    let posts = await postsModel.find({ userID : req.body.id })
+    tempRes.content = posts
+
+    console.log(tempRes)
+    res.status(tempRes.status).json(tempRes.content)
+})
+
 app.post('/db/signupNewUser', async (req, res) => {
     try {
         console.log('attempting to sign new user')
