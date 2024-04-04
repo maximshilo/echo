@@ -1,12 +1,13 @@
-import React from 'react' 
-import { useState, useEffect} from 'react'
+import React from 'react'
+import { useState, useEffect } from 'react'
 import store from '../redux/store.js'
 
 import Navbar from './Navbar.jsx'
+import Post from './Post.jsx'
 
 import '../css/Home.css'
 
-export default function Home () {
+export default function Home() {
     const [newPostContent, setNewPostContent] = useState('')
     const [loadPostsFlag, setLoadPostsFlag] = useState(false)
     const [posts, setPosts] = useState([])
@@ -15,19 +16,20 @@ export default function Home () {
 
     const attempPost = async () => {
         let newPost = {
-            content : newPostContent,
-            date : new Date(Date.now()),
-            likes : [],
-            username : currentUser.username,
-            userID : currentUser.id
+            content: newPostContent,
+            date: new Date(Date.now()),
+            likes: [],
+            username: currentUser.username,
+            userID: currentUser.id,
+            userPicture: currentUser.profilePicture
         }
 
         let res = await fetch('/db/addNewPost', {
-            method : 'POST',
-            headers : {
-                'Content-Type' : 'application/json'
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
             },
-            body : JSON.stringify(newPost)
+            body: JSON.stringify(newPost)
         }).then(res => res.json())
 
         setNewPostContent('')
@@ -38,10 +40,10 @@ export default function Home () {
     const loadPosts = async () => {
         let content = await fetch('/db/getPostsByUserId', {
             method: 'POST',
-            headers : {
-                'Content-Type' : 'application/json'
+            headers: {
+                'Content-Type': 'application/json'
             },
-            body : JSON.stringify({ id : currentUser.id })
+            body: JSON.stringify({ id: currentUser.id })
         }).then(res => res.json())
 
         console.log(content)
@@ -54,25 +56,32 @@ export default function Home () {
 
 
     const displayPosts = () => {
-        return posts.reverse().map(post => <div>{post.content}</div>)
+        return posts.reverse().map(post => <Post post={post} />)
     }
-    
+
     return (
         <div className='Home'>
             <Navbar user={currentUser} />
             <div className='homeContainer'>
-                <div>
-                    <h1>{currentUser.email}</h1>
-                    <h1>{new Date(currentUser.dob).toLocaleDateString()}</h1>
-                    <h1>{currentUser.following}</h1>
-                    <h1>{currentUser.id}</h1>
+                <div className='homeDiv'>
+                    <div className='row'>
+                        <div className='col'>
+                            <img className='profilePicture' src={`profile_pictures/p${currentUser.profilePicture}.webp`}></img>
+                        </div>
+                        <div className='col'>
+                            <div className='userInfoContentDiv'>
+                                <h2>Welcome,</h2>
+                                <h1>{currentUser.username}</h1>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div>
+                <div className='homeDiv'>
                     <input value={newPostContent} onChange={(e) => { setNewPostContent(e.target.value) }} placeholder='share a thought'></input>
                     <button onClick={() => { attempPost() }}>Post</button>
                 </div>
                 <div>
-                { displayPosts() }
+                    {displayPosts()}
                 </div>
             </div>
         </div>

@@ -16,6 +16,7 @@ const userSchema = mongoose.Schema({
     username: String,
     password: String,
     dob: Date,
+    profilePicture : Number,
     following: []
 })
 
@@ -25,8 +26,9 @@ const postSchema = mongoose.Schema({
     content : String,
     date : Date,
     likes : Array,
-    usesname : String,
-    userID : String
+    username : String,
+    userID : String,
+    userPicture : Number,
 })
 
 const postsModel = mongoose.model('posts', postSchema)
@@ -53,13 +55,11 @@ app.post('/db/getPostsByUserId', async (req, res) => {
     let posts = await postsModel.find({ userID : req.body.id })
     tempRes.content = posts
 
-    console.log(tempRes)
     res.status(tempRes.status).json(tempRes.content)
 })
 
 app.post('/db/signupNewUser', async (req, res) => {
     try {
-        console.log('attempting to sign new user')
         let tempRes = {
             status: 200,
             info: ''
@@ -78,6 +78,7 @@ app.post('/db/signupNewUser', async (req, res) => {
                 dob : dataRequest.dob,
                 email : dataRequest.email,
                 following : dataRequest.following,
+                profilePicture : dataRequest.profilePicture
             }
         } else {
             tempRes.status = 500
@@ -86,7 +87,8 @@ app.post('/db/signupNewUser', async (req, res) => {
                 id: null,
                 dob: null,
                 email: null,
-                following: []
+                following: [],
+                profilePicture : 1
             }
         }
 
@@ -115,6 +117,7 @@ app.post('/db/signinUser', async (req, res) => {
                 dob : dataRequest.dob,
                 email : dataRequest.email,
                 following : dataRequest.following,
+                profilePicture : dataRequest.profilePicture
             }
         } else {
             tempRes.status = 500
@@ -123,7 +126,8 @@ app.post('/db/signinUser', async (req, res) => {
                 id: null,
                 dob: null,
                 email: null,
-                following: []
+                following: [],
+                profilePicture : 1
             }
         }
 
@@ -132,6 +136,30 @@ app.post('/db/signinUser', async (req, res) => {
         console.log(e.toString())
         res.status(500).json({ error: e.toString() })
     }
+})
+
+app.put('/db/likePost', async (req, res) => {
+    let likes = req.body.likes
+    let postID = req.body.postID
+    let userID = req.body.userID
+
+    likes.push(userID)
+
+    let temp = await postsModel.findOneAndUpdate({ _id: postID }, { likes : likes})
+
+    res.status(200).json({ message : 'OK'})
+})
+
+app.put('/db/unlikePost', async (req, res) => {
+    let likes = req.body.likes
+    let postID = req.body.postID
+    let index = req.body.index
+
+    likes = likes.toSpliced(index, 1)
+    
+    let temp = await postsModel.findOneAndUpdate({ _id: postID }, { likes : likes})
+
+    res.status(200).json({ message : 'OK'})
 })
 
 app.get('*', (req, res) => {

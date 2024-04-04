@@ -1,0 +1,60 @@
+.Post {
+    background: white;
+    width: calc(60vw - 4 * 12px);
+    min-width: 360px;
+    margin: 12px;
+
+    padding: 12px;
+    border-radius: 6px;
+
+    box-shadow: 0px 3px 5px rgba(128, 128, 128, 0.5);
+}
+
+.postPicture {
+    width: 64px;
+    height: 64px;
+    border-radius: 6px;
+    box-shadow: 0px 1px 2px rgba(128, 128, 128, 0.5);
+}
+
+
+.postContent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    position: relative;
+
+    padding: 0 12px;
+}
+
+.likes {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.heart {
+    transition: 75ms;
+    border-radius: 6px;
+}
+
+.heart:hover {
+    background: pink;
+    transform: scale(1.05);
+}
+
+.heart:active {
+    background: red;
+    transform: scale(1.15);
+}
+
+#likesCount {
+    margin: 0 3px;
+}
