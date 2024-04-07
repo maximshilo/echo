@@ -17,7 +17,8 @@ const userSchema = mongoose.Schema({
     password: String,
     dob: Date,
     profilePicture: Number,
-    following: []
+    following: Array,
+    followers: Array
 })
 
 const usersModel = mongoose.model('users', userSchema)
@@ -110,7 +111,26 @@ app.get('/db/getAllUsers', async (req, res) => {
     res.status(200).json(users)
 })
 
+app.post('/db/getUserByID', async (req, res) => {
+    let temp = await usersModel.findOne({ _id: req.body._id })
+    let user = {
+        username: temp.username,
+        id: temp._id,
+        dob: temp.dob,
+        email: temp.email,
+        following: temp.following,
+        followers: temp.followers,
+        profilePicture: temp.profilePicture
+    }
+    console.log(user)
+
+    res.status(200).json(user)
+})
+
 app.post('/db/signinUser', async (req, res) => {
+    let reqTime = new Date()
+    console.log(reqTime.toJSON(), 'REQ -> POST /db/signinUser')
+
     try {
         let tempRes = {
             status: 200,
@@ -128,6 +148,7 @@ app.post('/db/signinUser', async (req, res) => {
                 dob: dataRequest.dob,
                 email: dataRequest.email,
                 following: dataRequest.following,
+                followers: dataRequest.followers,
                 profilePicture: dataRequest.profilePicture
             }
         } else {
@@ -138,10 +159,12 @@ app.post('/db/signinUser', async (req, res) => {
                 dob: null,
                 email: null,
                 following: [],
+                followers: [],
                 profilePicture: 1
             }
         }
 
+        console.log(new Date().toJSON(), 'POST -> POST /db/signinUser -> RES TIME(ms):', (reqTime - new Date()))
         res.status(tempRes.status).json(tempRes)
     } catch (e) {
         console.log(e.toString())
@@ -150,6 +173,14 @@ app.post('/db/signinUser', async (req, res) => {
 })
 
 app.put('/db/likePost', async (req, res) => {
+    // put /db/likePost
+    // likes a post by it's ID
+    // req -> body -> {
+    //    likes : Array of Strings (user IDs),
+    //    postID : String,
+    //    userID : String, the ObjectID of the user whose like is to be added to the likes array
+    //}
+
     let likes = req.body.likes
     let postID = req.body.postID
     let userID = req.body.userID
@@ -162,6 +193,15 @@ app.put('/db/likePost', async (req, res) => {
 })
 
 app.put('/db/unlikePost', async (req, res) => {
+    // put /db/unlikePost 
+    // unlikes a post by it's ID
+    // req -> body -> {
+    //     likes : Array of Strings (user IDs),
+    //     postID : String,
+    //     index : Number, the position of the current user, whose like is to be removed, in the likes array
+    // }
+    // sends 200, and { message: 'OK' }
+
     let likes = req.body.likes
     let postID = req.body.postID
     let index = req.body.index
@@ -174,6 +214,11 @@ app.put('/db/unlikePost', async (req, res) => {
 })
 
 app.put('/db/deletePost', async (req, res) => {
+    // put /db/deletePost
+    // delete's a post document from the posts collection.
+    // req -> body -> { postID : String }
+    // sends 200, and the deleted post
+
     let postID = req.body.postID
 
     let temp = await postsModel.findOneAndDelete({ _id: postID })
@@ -181,13 +226,53 @@ app.put('/db/deletePost', async (req, res) => {
     res.status(200).json(temp)
 })
 
+app.put('/db/followUser', async (req, res) => {
+    // put /db/followUser
+    // follows a users by ID.
+    // req -> body -> {
+    //     subjectUserID : String,
+    //     objectUserID : String
+    // }
+
+    let reqTime = new Date()
+    console.log(reqTime.toJSON(), 'REQ -> PUT /db/followUser')
+
+    try {
+        let subjectUserID = req.body.subjectUserID
+        let objectUserID = req.body.objectUserID
+
+        let subjectUser = await usersModel.findOne({ _id: subjectUserID })
+        let objectUser = await usersModel.findOne({ _id: objectUserID })
+
+        let subjectFollowers = [...subjectUser.followers]
+        let objectFollowing = [...objectUser.following]
+
+        subjectFollowers.push(objectUserID)
+        objectFollowing.push(subjectUserID)
+
+        subjectUser = await usersModel.findOneAndUpdate({ _id: subjectUserID }, { followers: subjectFollowers }, { returnNewDocument: true })
+        objectUser = await usersModel.findOneAndUpdate({ _id: objectUserID }, { following: objectFollowing }, { returnNewDocument: true })
+
+        res.status(200).json({ users: [subjectUser, objectUser] })
+        console.log(new Date().toJSON(), 'RES -> PUT /db/followUser -> RES TIME(ms):', (reqTime - new Date()))
+    } catch (e) {
+        console.log(e.toString())
+        res.status(500).json({ error: e.toString() })
+    }
+})
+
 app.get('*', (req, res) => {
+    // get *
+    // sends index.html if URL path exists.
+    // sends code 404 otherwise.
+
     try {
         res.sendFile('./index.html')
     } catch {
         res.status(404).send('404')
     }
 })
+
 
 app.listen(PORT, () => {
     console.log(`server is up; listening to port ${PORT}`)

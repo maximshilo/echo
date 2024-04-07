@@ -12,7 +12,8 @@ export default function Home() {
     const [loadPostsFlag, setLoadPostsFlag] = useState(false)
     const [posts, setPosts] = useState([])
 
-    const currentUser = store.getState().userReducer.currentUser
+    const [currentUser, setCurrentUser] = useState(store.getState().userReducer.currentUser)
+    console.log(currentUser)
 
     const attempPost = async () => {
         let newPost = {

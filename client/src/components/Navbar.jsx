@@ -16,7 +16,9 @@ export default function Navbar(props) {
     return (
         <div className='Navbar'>
             <div className='navbarContainer'>
-                <span>Welcome, {user.username}</span>
+                <span>Welcome,
+                    <Link to={'/home'}> {user.username}</Link>
+                </span>
                 <div>
                     <input
                         type='text'
