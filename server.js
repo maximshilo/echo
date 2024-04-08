@@ -9,7 +9,8 @@ const PORT = process.env.PORT || 4000
 app.use(cors())
 app.use(bodyParser.json())
 app.use(express.static('./client/build'))
-mongoose.connect('mongodb+srv://maximshilo00:326974359max@projectdb.j3ljufi.mongodb.net/echo_collections')
+
+//mongoose connection
 
 const userSchema = mongoose.Schema({
     email: String,
