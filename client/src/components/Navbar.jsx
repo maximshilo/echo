@@ -22,7 +22,13 @@ export default function Navbar(props) {
                 <div>
                     <input
                         type='text'
-                        style={{ textIndent: '0', textAlign: 'center' }}
+                        style={
+                            {
+                                textIndent: '0',
+                                textAlign: 'center',
+                                padding: '3px 6px'
+                            }
+                        }
                         placeholder='serach for another user'
                         onChange={(e) => {
                             setSearch(e.target.value) 
