@@ -11,6 +11,7 @@ app.use(bodyParser.json())
 app.use(express.static('./client/build'))
 
 //mongoose connection
+mongoose.connect('mongodb+srv://maximshilo00:326974359max@projectdb.j3ljufi.mongodb.net/echo_collections')
 
 const userSchema = mongoose.Schema({
     email: String,
@@ -255,11 +256,63 @@ app.put('/db/followUser', async (req, res) => {
         objectUser = await usersModel.findOneAndUpdate({ _id: objectUserID }, { following: objectFollowing }, { returnNewDocument: true })
 
         res.status(200).json({ users: [subjectUser, objectUser] })
-        console.log(new Date().toJSON(), 'RES -> PUT /db/followUser -> RES TIME(ms):', (reqTime - new Date()))
+        console.log(new Date().toJSON(), 'RES -> PUT /db/followUser -> RES TIME(ms):', (new Date() - reqTime))
     } catch (e) {
         console.log(e.toString())
         res.status(500).json({ error: e.toString() })
     }
+})
+
+app.post('/db/unfollowUser', async (req, res) => {
+    // post /db/unfollowUser
+    // unfollows a user by id
+    // req -> body -> {
+    //     subjectUserID : String,
+    //     objectUserID : String
+    // }
+
+    let reqTime = new Date()
+    console.log(reqTime.toJSON(), 'REQ -> POST /db/unfollowUser')
+
+    try {
+        let subjectUserID = req.body.subjectUserID
+        let objectUserID = req.body.objectUserID
+
+        let subjectUser = await usersModel.findOne({ _id : subjectUserID })
+        let objectUser = await usersModel.findOne({ _id : objectUserID })
+
+        let subjectFollowers = subjectUser.followers
+        let objectFollowing = objectUser.following
+
+        let objectIndex = subjectFollowers.findIndex(id => id == objectUserID)
+        let subjectIndex = objectFollowing.findIndex(id => id == subjectUserID)
+
+        subjectFollowers = subjectFollowers.toSpliced(objectIndex, 1)
+        objectFollowing = objectFollowing.toSpliced(subjectIndex, 1)
+
+        
+        subjectUser = await usersModel.findOneAndUpdate({ _id: subjectUserID }, { followers : subjectFollowers }, {returnNewDocument: true})
+        objectUser = await usersModel.findOneAndUpdate({ _id: objectUserID }, { following : objectFollowing }, {returnNewDocument: true})
+        
+        console.log(objectUser)
+
+        objectUser = {
+            username: objectUser.username,
+            id: objectUser._id,
+            dob: objectUser.dob,
+            email: objectUser.email,
+            following: objectFollowing,
+            followers: objectUser.followers,
+            profilePicture: objectUser.profilePicture
+        }
+
+        res.status(200).json(objectUser)
+    } catch (e) {
+        console.log(new Date().toJSON(), 'ERROR -> POST /db/unfollowUser ->', e.toString())
+        res.status(500).json({ error : e.toString()})
+    }
+
+    console.log(new Date().toJSON(), 'RES -> POST /db/unfollowUser -> RES TIME (ms):', (new Date() - reqTime))
 })
 
 app.get('*', (req, res) => {

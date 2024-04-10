@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import store from '../redux/store'
-import { updateCurrentUserFromDatabase } from '../redux/actions.js'
+import { updateCurrentUserFromDatabase, signinUser } from '../redux/actions.js'
 
 import Navbar from './Navbar'
 
@@ -100,6 +100,23 @@ function SearchResult(props) {
             }}>Follow</button>
         } else {
             return <button onClick={async () => {
+                await fetch('/db/unfollowUser', {
+                    method : 'POST',
+                    headers : {
+                        'Content-Type' : 'application/json'
+                    },
+                    body : JSON.stringify({
+                        subjectUserID : displayedUserID,
+                        objectUserID : currentUser.id
+                    })
+                })
+                .then((res) => {
+                    setFollowFlag(true)
+                    return res.json()
+                })
+                .then(async (json) => {
+                    store.dispatch(signinUser(json))
+                })
                 setFollowFlag(true)
             }}>Unfollow</button>
         }
