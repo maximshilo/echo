@@ -12,6 +12,7 @@ import '../css/Search.css'
 export default function Search(props) {
     const [params] = useSearchParams()
     const [results, setResults] = useState([])
+    const [suggestions, setSuggestions] = useState([])
 
     const currentUser = store.getState().userReducer.currentUser
 
@@ -30,20 +31,26 @@ export default function Search(props) {
 
     const loadResults = async () => {
         let searchStrings = generateSearchStrings()
-        let results = await fetch('/db/getAllUsers').then(res => res.json())
+        let results = []
 
-        results = results.filter(res => {
-            let temp = false
-            searchStrings.forEach(str => {
-                if (res.username.includes(str)) {
-                    temp = true
+        if (searchStrings[0] != '') {
+            results = await fetch('/db/getAllUsers').then(res => res.json())
+
+            results = results.filter(res => {
+                let temp = false
+
+
+                searchStrings.forEach(str => {
+                    if (res.username.includes(str)) {
+                        temp = true
+                    }
+                })
+
+                if (temp && res._id != currentUser.id) {
+                    return res
                 }
             })
-
-            if (temp) {
-                return res
-            }
-        })
+        }
         setResults(results)
     }
 
@@ -51,13 +58,37 @@ export default function Search(props) {
 
     const displayResults = () => {
         return results.map(res => {
-            return <SearchResult res={res} following={currentUser.following}/>
+            return <SearchResult res={res} following={currentUser.following} />
         })
+    }
+
+    const displaySuggestions = () => {
+        return suggestions.map(res => {
+            return <SearchResult res={res} following={currentUser.following} />
+        })
+    }
+
+    const loadSuggestions = async () => {
+        let body = {
+            currentUserID: currentUser.id,
+            currentUserFollowing: currentUser.following,
+            displayedResults: results.map(res => res._id)
+        }
+
+        let suggestions = await fetch('/db/getFollowSuggestions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        })
+            .then((res) => { return res.json() })
+
+        setSuggestions(suggestions)
     }
 
     useEffect(() => {
         setOriginal(params.get('search'))
         loadResults()
+        loadSuggestions()
     }, [params])
 
     return (
@@ -65,6 +96,13 @@ export default function Search(props) {
             <Navbar user={store.getState().userReducer.currentUser} />
             <div className='searchContainer'>
                 {displayResults()}
+                <span
+                style={{
+                    margin: '12px'
+                }}
+                className='defaultHeading'>
+                Suggestions</span>
+                {displaySuggestions()}
             </div>
         </div>
     )
@@ -80,13 +118,13 @@ function SearchResult(props) {
         if (followFlag) {
             return <button className='generalUseWideButton' onClick={async () => {
                 await fetch('/db/followUser', {
-                    method : 'PUT',
-                    headers : {
-                        'Content-Type' : 'application/json'
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
                     },
-                    body : JSON.stringify({
-                        subjectUserID : displayedUserID,
-                        objectUserID : currentUser.id
+                    body: JSON.stringify({
+                        subjectUserID: displayedUserID,
+                        objectUserID: currentUser.id
                     })
                 }).then((res) => {
                     setFollowFlag(false)
@@ -95,28 +133,28 @@ function SearchResult(props) {
                     console.log(json)
                     await updateCurrentUserFromDatabase(currentUser).then(action => store.dispatch(action))
                 })
-                
-                
+
+
             }}>Follow</button>
         } else {
             return <button onClick={async () => {
                 await fetch('/db/unfollowUser', {
-                    method : 'POST',
-                    headers : {
-                        'Content-Type' : 'application/json'
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
                     },
-                    body : JSON.stringify({
-                        subjectUserID : displayedUserID,
-                        objectUserID : currentUser.id
+                    body: JSON.stringify({
+                        subjectUserID: displayedUserID,
+                        objectUserID: currentUser.id
                     })
                 })
-                .then((res) => {
-                    setFollowFlag(true)
-                    return res.json()
-                })
-                .then(async (json) => {
-                    store.dispatch(signinUser(json))
-                })
+                    .then((res) => {
+                        setFollowFlag(true)
+                        return res.json()
+                    })
+                    .then(async (json) => {
+                        store.dispatch(signinUser(json))
+                    })
                 setFollowFlag(true)
             }}>Unfollow</button>
         }
@@ -124,10 +162,22 @@ function SearchResult(props) {
     }
 
     return (
-        <div className='Post'>
+        <div className='SearchResult'>
             <div className='row'>
                 <img className='postPicture' src={`profile_pictures/p${res.profilePicture}.webp`}></img>
+
                 <span style={{ marginLeft: '12px', fontSize: '24px' }} className='defaultHeading'>{res.username}</span>
+            </div>
+
+            <div className='row'>
+                <div
+                    style={{
+                        margin: '9px'
+                    }}
+                    className='col'>
+                    <span>{res.following.length} following</span>
+                    <span>{res.followers.length} followers</span>
+                </div>
                 {displayFollowButton(res._id)}
             </div>
         </div>

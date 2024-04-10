@@ -21,3 +21,21 @@
     align-items: center;
 
 }
+
+.SearchResult {
+    background: white;
+    width: calc(60vw - 4 * 12px);
+    max-width: 672px;
+    min-width: 360px;
+    margin: 12px;
+
+    padding: 12px;
+    border-radius: 6px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    box-shadow: 0px 3px 5px rgba(128, 128, 128, 0.5);
+}

@@ -278,8 +278,8 @@ app.post('/db/unfollowUser', async (req, res) => {
         let subjectUserID = req.body.subjectUserID
         let objectUserID = req.body.objectUserID
 
-        let subjectUser = await usersModel.findOne({ _id : subjectUserID })
-        let objectUser = await usersModel.findOne({ _id : objectUserID })
+        let subjectUser = await usersModel.findOne({ _id: subjectUserID })
+        let objectUser = await usersModel.findOne({ _id: objectUserID })
 
         let subjectFollowers = subjectUser.followers
         let objectFollowing = objectUser.following
@@ -290,10 +290,10 @@ app.post('/db/unfollowUser', async (req, res) => {
         subjectFollowers = subjectFollowers.toSpliced(objectIndex, 1)
         objectFollowing = objectFollowing.toSpliced(subjectIndex, 1)
 
-        
-        subjectUser = await usersModel.findOneAndUpdate({ _id: subjectUserID }, { followers : subjectFollowers }, {returnNewDocument: true})
-        objectUser = await usersModel.findOneAndUpdate({ _id: objectUserID }, { following : objectFollowing }, {returnNewDocument: true})
-        
+
+        subjectUser = await usersModel.findOneAndUpdate({ _id: subjectUserID }, { followers: subjectFollowers }, { returnNewDocument: true })
+        objectUser = await usersModel.findOneAndUpdate({ _id: objectUserID }, { following: objectFollowing }, { returnNewDocument: true })
+
         console.log(objectUser)
 
         objectUser = {
@@ -309,10 +309,41 @@ app.post('/db/unfollowUser', async (req, res) => {
         res.status(200).json(objectUser)
     } catch (e) {
         console.log(new Date().toJSON(), 'ERROR -> POST /db/unfollowUser ->', e.toString())
-        res.status(500).json({ error : e.toString()})
+        res.status(500).json({ error: e.toString() })
     }
 
     console.log(new Date().toJSON(), 'RES -> POST /db/unfollowUser -> RES TIME (ms):', (new Date() - reqTime))
+})
+
+app.post('/db/getFollowSuggestions', async (req, res) => {
+    // post /db/getFollowSuggestions
+    // sends 10 users that are fit to be a suggestion
+    // req -> body -> {
+    //     currentUserID : String,
+    //     currentUserFollowing : Array,
+    //     displayedResults : Array
+    // }
+
+    let reqTime = new Date()
+    console.log(reqTime.toJSON(), 'REQ -> POST /db/getFollowSuggestions')
+
+    try {
+        let currentUserID = req.body.currentUserID
+        let currentUserFollowing = req.body.currentUserFollowing
+        let displayedResults = req.body.displayedResults
+
+        currentUserFollowing.push(currentUserID)
+        currentUserFollowing.concat(displayedResults)
+
+        let suggestions = await usersModel.find({ _id: { $nin: currentUserFollowing } })
+
+        res.status(200).json(suggestions)
+    } catch (e) {
+        console.log(new Date().toJSON(), 'ERROR -> /db/getFollowSuggestions ->', e.toString())
+        res.status(500).json({ error: e.toString() })
+    }
+
+    console.log(new Date().toJSON(), 'RES -> POST /db/getFollowSuggestions -> RES TIME (ms):', new Date() - reqTime)
 })
 
 app.get('*', (req, res) => {

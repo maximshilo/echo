@@ -15,6 +15,14 @@ export default function Home() {
     const [currentUser, setCurrentUser] = useState(store.getState().userReducer.currentUser)
     console.log(currentUser)
 
+    const postSuggestions = [
+        String.raw`Wow, day made! 🌈 Your turn? #GoodVibes`,
+        String.raw`Caught a sunset that hit different 🌇`,
+        String.raw`Found joy in a small moment today`,
+        String.raw`Today’s win: ☕️ + 🎶. Yours?`,
+        String.raw`Smiled at a stranger, they smiled back.`,
+    ]
+
     const attempPost = async () => {
         let newPost = {
             content: newPostContent,
@@ -53,7 +61,7 @@ export default function Home() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ following : currentUser.following })
+            body: JSON.stringify({ following: currentUser.following })
         }).then(res => res.json())
         console.log(followingPosts)
 
@@ -67,29 +75,39 @@ export default function Home() {
 
 
     const displayPosts = () => {
-        return <div>{posts.map((post, idx) => <Post render={{loadPostsFlag, setLoadPostsFlag}} key={post._id} post={post} />)}</div>
+        return <div>{posts.map((post, idx) => <Post render={{ loadPostsFlag, setLoadPostsFlag }} key={post._id} post={post} />)}</div>
     }
 
     return (
         <div className='Home'>
             <Navbar user={currentUser} />
             <div className='homeContainer'>
-                <div className='homeDiv'>
-                    <div className='row'>
-                        <div className='col'>
-                            <img className='profilePicture' src={`profile_pictures/p${currentUser.profilePicture}.webp`}></img>
-                        </div>
-                        <div className='col'>
-                            <div className='userInfoContentDiv'>
-                                <h2>Welcome,</h2>
-                                <h1>{currentUser.username}</h1>
+                <div className='upperRow'>
+                    <div className='homeDiv'>
+                        <div className='row'>
+                            <div className='col'>
+                                <img className='profilePicture' src={`profile_pictures/p${currentUser.profilePicture}.webp`}></img>
+                            </div>
+                            <div className='col'>
+                                <div className='userInfoContentDiv'>
+                                    <span className='defaultHeading'>Welcome,</span>
+                                    <h1>{currentUser.username}</h1>
+                                    <span className='followers'>{currentUser.followers.length} followers</span>
+                                    <span className='following'>{currentUser.following.length} following</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className='homeDiv'>
-                    <input value={newPostContent} onChange={(e) => { setNewPostContent(e.target.value) }} placeholder='share a thought'></input>
-                    <button onClick={() => { attempPost() }}>Post</button>
+                    <div className='postDiv'>
+                        <textarea
+                        className='postInput'
+                        value={newPostContent}
+                        onChange={(e) => { setNewPostContent(e.target.value) }}
+                        placeholder={postSuggestions[parseInt(Math.random() * postSuggestions.length)]}>
+
+                        </textarea>
+                        <button className='postButton' onClick={() => { attempPost() }}>Post</button>
+                    </div>
                 </div>
                 <div>
                     {displayPosts()}

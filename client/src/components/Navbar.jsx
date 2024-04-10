@@ -24,12 +24,13 @@ export default function Navbar(props) {
                         type='text'
                         style={
                             {
-                                textIndent: '0',
-                                textAlign: 'center',
-                                padding: '3px 6px'
+                                textIndent: '0px',
+                                textAlign: 'left',
+                                padding: '3px 12px',
+                                margin: '0 6px'
                             }
                         }
-                        placeholder='serach for another user'
+                        placeholder='serach for a user'
                         onChange={(e) => {
                             setSearch(e.target.value) 
                             }}
