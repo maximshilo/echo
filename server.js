@@ -11,7 +11,6 @@ app.use(bodyParser.json())
 app.use(express.static('./client/build'))
 
 //mongoose connection
-mongoose.connect('mongodb+srv://maximshilo00:326974359max@projectdb.j3ljufi.mongodb.net/echo_collections')
 
 const userSchema = mongoose.Schema({
     email: String,
